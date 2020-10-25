@@ -1,26 +1,29 @@
 const config = require("config");
 const express = require("express");
-const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const helmet = require("helmet");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 
 const port = config.get("port");
 
+const genresRoutes = require("./routes/genres");
+
 const app = express();
 
-const adminRoutes = require("./routes/admin");
-const shopRoutes = require("./routes/shop");
+mongoose
+  .connect("mongodb://localhost/plauground", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Conected to MongoDB ..."))
+  .catch((err) => console.error("Could not connect to MongoDB ...", err));
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(morgan("dev"));
-
-app.use(adminRoutes);
-app.use(shopRoutes);
-
-app.use((req, res, next) => {
-  res.status(404).send("<h1>Page not Found</h1>");
-});
+app.use(express.json());
+app.use("/api/genres", genresRoutes);
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
