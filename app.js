@@ -3,7 +3,6 @@ const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 
 const port = config.get("port");
 
@@ -19,7 +18,6 @@ mongoose
   .then(() => console.log("Conected to MongoDB ..."))
   .catch((err) => console.error("Could not connect to MongoDB ...", err));
 
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());

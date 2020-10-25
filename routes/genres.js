@@ -31,9 +31,7 @@ router.put("/:id", async (req, res) => {
   const genre = await Genre.findByIdAndUpdate(
     req.params.id,
     { name: req.body.name },
-    {
-      new: true,
-    }
+    { new: true }
   );
 
   if (!genre)
